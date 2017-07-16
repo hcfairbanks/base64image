@@ -1,0 +1,86 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Email</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.first_name %></td>
+        <td><%= user.last_name %></td>
+        <td><%= user.email %></td>
+        <td><%= link_to 'Show', user %></td>
+        <td><%= link_to 'Edit', edit_user_path(user) %></td>
+        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New User', new_user_path %>
+<script>
+// function getBase64(file) {
+//    var reader = new FileReader();
+//    reader.readAsDataURL(file);
+//    reader.onload = function () {
+//      base64string = reader.result
+//      console.log(base64string);
+//    };
+//   //  reader.onerror = function (error) {
+//   //    console.log('Error: ', error);
+//   //  };
+//   return reader.onload
+// }
+
+
+
+function send_docs(e){
+  var reader = new FileReader()
+  var files = document.getElementById('resume').files;
+  // alert(getBase64(files[0])); // prints the base64 string
+
+  var reader = new FileReader();
+  reader.readAsDataURL(files[0]);
+  reader.onload = function () {
+    base64string = reader.result
+    console.log(base64string);
+
+
+  info = {
+           name: "John",
+           age: 30,
+           resume: base64string
+         };
+
+  $.ajax({
+      url: "http://localhost:3000/users/document_create",
+      type: "POST",
+      dataType: "JSON",
+      data: info,
+      success: function (response) {
+        alert(response);
+      }
+  });
+}; //End of encoding
+    //reader.readAsDataURL(file.files[0]);
+};
+
+
+</script>
+
+
+<form onsubmit="return send_docs(this)">
+  <input type="file" name="file" id="resume">
+  <input type="submit">
+</form>
