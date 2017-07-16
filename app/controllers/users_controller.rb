@@ -39,7 +39,7 @@ class UsersController < ApplicationController
     #   f.write(decode_base64_content)
     # end
 
-
+# https://stackoverflow.com/questions/1160741/how-to-save-a-base64-string-as-an-image-using-ruby
     regex = /\Adata:([-\w]+\/[-\w\+\.]+)?;base64,(.*)/m
 
     data_uri_parts = params[:resume].match(regex) || []
