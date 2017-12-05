@@ -153,3 +153,5 @@ rails db:create db:migrate
 -----------------
 run single minitest
 rails test test/controllers/cats_controller_test.rb:9
+run single rspec test
+rspec spec/controllers/cats_controller_spec.rb:8
