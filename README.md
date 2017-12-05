@@ -148,3 +148,8 @@ rails db:create db:migrate
 8. boot application and take it for a spin
 
 9. right rspec tests
+
+
+-----------------
+run single minitest
+rails test test/controllers/cats_controller_test.rb:9
