@@ -6,7 +6,8 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Picture</th>
+      <th>Picture Location</th>
+      <th>Picture Name</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -16,6 +17,10 @@
       <tr>
         <td><%= cat.name %></td>
         <td><%= cat.picture %></td>
+        <td><%= cat.picture_identifier %></td>
+
+
+
         <td><%= link_to 'Show', cat %></td>
         <td><%= link_to 'Edit', edit_cat_path(cat) %></td>
         <td><%= link_to 'Destroy', cat, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -31,6 +36,7 @@
   function send_docs(e){
     var reader = new FileReader()
     var files = document.getElementById('picture').files;
+    var name = document.getElementById('name').value
     var reader = new FileReader();
     reader.readAsDataURL(files[0]);
 
@@ -38,7 +44,7 @@
       base64string = reader.result
       console.log(base64string);
       info = {cat:{
-               name: "Mr Furry Bottom",
+               name: name,
                picture: base64string
              }};
 
@@ -48,7 +54,11 @@
           dataType: "JSON",
           data: info,
           success: function (response) {
-          //  alert(response);
+            // You can see the full response object in
+            // Chrome developer tools, console
+            // console.log(response)
+            alert("Name: " + response.name + " ID:" + response.id );
+            $('#string_image_form').trigger("reset");
           }
       });
 
@@ -58,7 +68,11 @@
 </script>
 
 
-<form onsubmit="return send_docs(this)">
+<form id='string_image_form' onsubmit="send_docs(this); return false;">
+  <label for="name">Name</label>
+  <input type="text" name="name" id="name">
+  <label for="file">Picture</label>
   <input type="file" name="file" id="picture">
+  <br/>
   <input type="submit">
 </form>
