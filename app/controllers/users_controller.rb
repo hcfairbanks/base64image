@@ -22,18 +22,19 @@ class UsersController < ApplicationController
   end
 
   def document_create
-    puts "*" * 20
-    puts params[:resume]
-    puts "*" * 20
+
+#    puts "*" * 20
+#    puts params[:resume]
+#    puts "*" * 20
 
     require "base64"
-    enc   = Base64.encode64('Send reinforcements')
+#    enc   = Base64.encode64('Send reinforcements')
                     # -> "U2VuZCByZWluZm9yY2VtZW50cw==\n"
-    plain = Base64.decode64(enc)
+#    plain = Base64.decode64(enc)
                     # -> "Send reinforcements"
-    puts "*" * 20
-    puts plain
-    puts "*" * 20
+#    puts "*" * 20
+#    puts plain
+#    puts "*" * 20
     # decode_base64_content = Base64.decode64(params[:resume])
     # File.open(Rails.root.join("Output.jpg"), "wb") do |f|
     #   f.write(decode_base64_content)
@@ -41,8 +42,8 @@ class UsersController < ApplicationController
 
 # https://stackoverflow.com/questions/1160741/how-to-save-a-base64-string-as-an-image-using-ruby
     regex = /\Adata:([-\w]+\/[-\w\+\.]+)?;base64,(.*)/m
-
     data_uri_parts = params[:resume].match(regex) || []
+
     extension = MIME::Types[data_uri_parts[1]].first.preferred_extension
     file_name = Rails.root.join("myfilename.#{extension}")
 
@@ -105,5 +106,6 @@ class UsersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       params.require(:user).permit(:first_name, :last_name, :email)
+      #params.require(:resume).permit(:name, :age, :resume)
     end
 end
