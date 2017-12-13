@@ -7,7 +7,8 @@ require 'base64'
 describe "Picture Uploader" do
   include CarrierWave::Test::Matchers
 
-  let(:cat) { Cat.create() }
+  #let(:cat) { Cat.create() } #either of these will work
+  let(:cat) { FactoryGirl.create(:cat) }
   let(:uploader) { PictureUploader.new(cat, :picture) }
 
   before do
@@ -22,7 +23,7 @@ describe "Picture Uploader" do
 
   after do
     PictureUploader.enable_processing = false
-#    uploader.remove!
+    uploader.remove!
   end
 
   # context 'the thumb version' do
@@ -43,7 +44,7 @@ describe "Picture Uploader" do
 
   it "has the correct format" do
     path_to_file = File.join(Rails.root,"spec","fixtures","binaries","cat_images","cat_1.jpeg")
-    expect(uploader.current_path).to be_identical_to(path_to_file)    
+    expect(uploader.current_path).to be_identical_to(path_to_file)
     expect(uploader).to be_format('JPEG')
   end
 end
