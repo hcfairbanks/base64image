@@ -1,8 +1,11 @@
 require 'rails_helper'
 require 'spec_helper'
 require 'base64'
+require 'carrierwave/test/matchers'
+#https://til.codes/testing-carrierwave-file-uploads-with-rspec-and-factorygirl/
 
 RSpec.describe CatsController, type: :controller do
+  include CarrierWave::Test::Matchers
   file_path = File.join(Rails.root,"spec","fixtures","binaries","cat_images","cat_1.jpeg")
 
   cat_image = Base64.encode64(File.open(file_path).read)
@@ -33,6 +36,13 @@ RSpec.describe CatsController, type: :controller do
       result = File.exist? File.expand_path created_file_path
       expect(result).to be true
       expect(File.size(created_file_path)).to eq(3210265)
+
+
+      expect(FileUtils.identical?(created_file_path,file_path)).to be true
+
+      # puts "*" * 50
+      # puts assigns(:cat).picture
+      # puts "*" * 50
 
 
     end
