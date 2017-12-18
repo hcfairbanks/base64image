@@ -13,7 +13,7 @@ class PictureUploader < CarrierWave::Uploader::Base
   def store_dir
     # by specifying the environment in the path, you can run tests without fear
     # just ensure to clean up this folder after tests as it could take up a lot of space
-    File.join(Rails.root,"public","uploaded_files",Rails.env,"#{model.class.to_s.underscore}", "#{mounted_as}", model.id.to_s)
+    File.join(Rails.root,"public","uploads",Rails.env,"#{model.class.to_s.underscore}", "#{mounted_as}", model.id.to_s)
     # "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
