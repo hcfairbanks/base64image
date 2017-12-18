@@ -24,9 +24,7 @@ class CatsController < ApplicationController
   # POST /cats
   # POST /cats.json
   def create
-#byebug
     @cat = Cat.new(cat_params)
-
     respond_to do |format|
       if @cat.save
         format.html { redirect_to @cat, notice: 'Cat was successfully created.' }

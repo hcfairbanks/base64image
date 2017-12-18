@@ -5,6 +5,7 @@
 <table>
   <thead>
     <tr>
+      <th>Image</th>
       <th>Name</th>
       <th>Picture Location</th>
       <th>Picture Name</th>
@@ -15,12 +16,12 @@
   <tbody>
     <% @cats.each do |cat| %>
       <tr>
+        <td>
+          <%= image_tag(cat.picture.thumb, alt: "Cat Thumbnail Picture") %>
+        </td>
         <td><%= cat.name %></td>
         <td><%= cat.picture %></td>
         <td><%= cat.picture_identifier %></td>
-
-
-
         <td><%= link_to 'Show', cat %></td>
         <td><%= link_to 'Edit', edit_cat_path(cat) %></td>
         <td><%= link_to 'Destroy', cat, method: :delete, data: { confirm: 'Are you sure?' } %></td>
