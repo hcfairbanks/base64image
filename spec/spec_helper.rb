@@ -20,7 +20,7 @@ require 'database_cleaner'
 RSpec.configure do |config|
   config.after(:each) do
     if Rails.env.test?
-      FileUtils.rm_rf(Dir["#{Rails.root}/public/uploaded_files/test"])
+      FileUtils.rm_rf(Dir["#{Rails.root}/public/uploads/test"])
     end
   end
   config.before(:suite) do

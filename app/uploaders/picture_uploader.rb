@@ -1,5 +1,5 @@
 class PictureUploader < CarrierWave::Uploader::Base
-
+  permissions 0600
   # Include RMagick or MiniMagick support:
   include CarrierWave::RMagick
   #include CarrierWave::MiniMagick
