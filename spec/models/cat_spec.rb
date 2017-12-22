@@ -47,31 +47,33 @@ RSpec.describe Cat, type: :model do
     expect(cat).to be_valid
   end
 
-  # it "can't update with invalid attributes" do
-  #   test_cat = Cat.create(valid_attributes)
-  #   test_cat.update(invalid_attributes)
-  #   test_cat.reload
-  #   expect(test_cat).to be_invalid
-  # end
+  describe "destroy" do
 
-  describe "delete a cat" do
+    before(:each) do
+      @cat = Cat.create(valid_attributes)
+    end
 
     it "decreases the cat count by 1" do
-      cat = Cat.create(valid_attributes)
-      expect {Cat.destroy(cat.id)}.to change(Cat, :count).by(-1)
+      expect {Cat.destroy(@cat.id)}.to change(Cat, :count).by(-1)
     end
 
-    it "can't be found in db" do
-      cat = Cat.create(valid_attributes)
-      Cat.destroy(cat.id)
-      expect(Cat.where(id: cat.id).count).to eq(0)
+    it "completely removes the cat from the db" do
+      Cat.destroy(@cat.id)
+      expect(Cat.where(id: @cat.id).count).to eq(0)
     end
 
-    # it "removes the cat image" do
-    #   test_user = Cat.create(valid_attributes)
-    #   Cat.destroy(test_user.id)
-    #   expect(Image.where(id: test_user.image.id).count).to eq(0)
-    # end
+    it "removes the cat picture directory" do
+    # For what ever reason carrierwave does not delete directories
+      cat_picture_dir = File.join(Rails.root,
+                                  "public",
+                                  "uploads",
+                                  Rails.env,
+                                  "cat",
+                                  "picture",
+                                  @cat.id.to_s)
+      Cat.destroy(@cat.id)
+      expect(File.exist?(cat_picture_dir)).to be false
+    end
 
   end
 
