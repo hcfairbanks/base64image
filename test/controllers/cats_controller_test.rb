@@ -2,13 +2,34 @@ require 'test_helper'
 
 class CatsControllerTest < ActionDispatch::IntegrationTest
 
-  setup do # before each
-    @cat = cats(:one)
-  end
-  # teardown do # after each
-  #   DatabaseCleaner.clean
-  # end
+  file_path = File.join(Rails.root,"spec","fixtures","binaries","cat_images","cat_1.jpeg")
 
+  cat_image = Base64.encode64(File.open(file_path).read)
+  data_url = "data:image/jpeg;base64,#{cat_image}"
+
+  # let(:valid_attributes) {
+  #   {
+  #     name: "Mr. Fluffy Bottom",
+  #     picture: data_url
+  #   }
+  # }
+
+
+  setup do # before each
+    # DatabaseCleaner.start
+    # DatabaseCleaner.clean
+    @cat = Cat.create!(name: "Mr. Fluffy Bottom", picture: data_url)
+    @cat.save!
+#byebug
+    # in the test_helper.rb the line
+    # fixtures :all
+    # will create entries into the db
+    # this messes with the db cleaner
+  end
+  teardown do # before each
+  #  DatabaseCleaner.start
+  #  DatabaseCleaner.clean
+  end
 
   test "should get index" do
     get cats_url
@@ -22,11 +43,9 @@ class CatsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create cat" do
     assert_difference('Cat.count') do
-    post cats_url, params: { cat: { name: @cat.name, picture: @cat.picture } }
+      post cats_url, params: { cat: { name: @cat.name, picture: @cat.picture } }
     end
     assert_redirected_to cat_url(Cat.last)
-
-
   end
 
   test "creates a file" do

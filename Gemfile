@@ -47,7 +47,6 @@ group :development, :test do
   gem 'rspec-rails'
   # gem 'faker'
   # gem 'mocha', require: false
-  # gem 'rspec-rails'
   # gem 'rspec-mocks'
   gem 'database_cleaner'
 end

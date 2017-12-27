@@ -7,7 +7,11 @@ require 'carrierwave/test/matchers'
 #https://relishapp.com/rspec/rspec-core/v/2-0/docs/hooks/before-and-after-hooks
 # minitest
 # http://guides.rubyonrails.org/testing.html#rails-sets-up-for-testing-from-the-word-go
-
+# Testing Philosophy
+# https://www.youtube.com/watch?v=z9quxZsLcfo&feature=youtu.be
+# You dont need database_cleaner
+# https://anti-pattern.com/transactional-fixtures-in-rails
+#https://blog.bigbinary.com/2016/05/26/rails-5-renamed-transactional-fixtures-to-transactional-tests.html
 
 RSpec.describe CatsController, type: :controller do
   include CarrierWave::Test::Matchers
