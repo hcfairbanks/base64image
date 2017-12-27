@@ -1,9 +1,14 @@
 require 'test_helper'
 
 class CatsControllerTest < ActionDispatch::IntegrationTest
-  setup do
+
+  setup do # before each
     @cat = cats(:one)
   end
+  # teardown do # after each
+  #   DatabaseCleaner.clean
+  # end
+
 
   test "should get index" do
     get cats_url
@@ -17,10 +22,19 @@ class CatsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create cat" do
     assert_difference('Cat.count') do
-      post cats_url, params: { cat: { name: @cat.name, picture: @cat.picture } }
+    post cats_url, params: { cat: { name: @cat.name, picture: @cat.picture } }
     end
-
     assert_redirected_to cat_url(Cat.last)
+
+
+  end
+
+  test "creates a file" do
+    post cats_url, params: { cat: { name: @cat.name, picture: @cat.picture } }
+    created_file_path = File.join(Rails.root,
+                                  "public","#{assigns(:cat).picture}")
+    result = File.exist? File.expand_path created_file_path
+    assert(result) #be true
   end
 
   test "should show cat" do

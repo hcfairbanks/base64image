@@ -3,6 +3,11 @@ require 'spec_helper'
 require 'base64'
 require 'carrierwave/test/matchers'
 #https://til.codes/testing-carrierwave-file-uploads-with-rspec-and-factorygirl/
+#READ THIS
+#https://relishapp.com/rspec/rspec-core/v/2-0/docs/hooks/before-and-after-hooks
+# minitest
+# http://guides.rubyonrails.org/testing.html#rails-sets-up-for-testing-from-the-word-go
+
 
 RSpec.describe CatsController, type: :controller do
   include CarrierWave::Test::Matchers
@@ -30,34 +35,48 @@ RSpec.describe CatsController, type: :controller do
     it "creates a new cat" do
       expect { post :create, params: {cat: valid_attributes} }.to change(Cat, :count).by(1)
       expect(assigns(:cat).errors.size).to eq(0)
+    end
 
-      # TODO Make these seperate tests
-      created_file_path = File.join(Rails.root,"public","#{assigns(:cat).picture}")
+    it "creates a file" do
+      post :create, params: {cat: valid_attributes}
+      created_file_path = File.join(Rails.root,
+                                    "public","#{assigns(:cat).picture}")
       result = File.exist? File.expand_path created_file_path
       expect(result).to be true
-      expect(File.size(created_file_path)).to eq(3210265)
-
-
-      expect(FileUtils.identical?(created_file_path,file_path)).to be true
-
-      # puts "*" * 50
-      # puts assigns(:cat).picture
-      # puts "*" * 50
-
-
     end
+
+    it " process the image to the propper mb size" do
+      post :create, params: {cat: valid_attributes}
+      created_img = File.join(Rails.root,"public","#{assigns(:cat).picture}")
+      expect(File.size(created_img)).to eq(80467)
+    end
+
+    it " image is identical to expected image" do
+      post :create, params: {cat: valid_attributes}
+      created_img = File.join(Rails.root,"public","#{assigns(:cat).picture}")
+      comparison_image = File.join( Rails.root,
+                                    "spec","fixtures","binaries",
+                                    "cat_comparison_images","cat_uploaded.jpeg")
+      #expect(FileUtils.identical?(created_img,comparison_image)).to be true
+      expect(created_img).to be_identical_to(comparison_image)
+    end
+
   end
 
-  # describe "GET #show user" do
-  #   it "assigns users to @users" do
-  #     get :show, params: {id: user_bob.to_param}
-  #     expect(assigns(:user)).to eq(user_bob)
-  #   end
-  #   it "renders the :show template" do
-  #     get :show, params: {id: user_bob.to_param}
-  #     expect(response).to render_template("show")
-  #   end
-  # end
+  describe "GET #show cat" do
+    before(:each) do
+      @cat = Cat.create(valid_attributes)
+    end
+
+    it "assigns cat to @cat" do
+      get :show, params: {id: @cat.to_param}
+      expect(assigns(:cat)).to eq(@cat)
+    end
+    it "renders the :show template" do
+      get :show, params: {id: @cat.to_param}
+      expect(response).to render_template("show")
+    end
+  end
 
   # describe "GET #new user" do
   #   it "assigns a new User to @user" do
