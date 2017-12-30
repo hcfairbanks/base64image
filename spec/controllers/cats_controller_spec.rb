@@ -147,10 +147,6 @@ RSpec.describe CatsController, type: :controller do
 
   # end
 
-
-
-
-
   describe "PUT #update cat" do
     before(:each) do
       @cat = Cat.create(valid_attributes)
@@ -170,73 +166,58 @@ RSpec.describe CatsController, type: :controller do
       end
       it "produces valid update flash message" do
         put :update, params: {id: @cat.to_param, cat: update_attributes}
-        expect(flash[:notice]).to match(I18n.t("cat.successfully-updated"))
+        expect(flash[:notice]).to match(I18n.t("cat.update.success"))
+      end
+    end
+
+    context "with invalid attributes" do
+      # before(:each) do
+      #   @cat = Cat.create(valid_attributes)
+      # end
+      it "assigns the cat" do
+        put :update, params: { id: @cat.to_param, cat: invalid_attributes}
+        @cat.reload
+        expect(@cat.name).to eq("Mr. Fluffy Bottom")
+      end
+      it "user is not valid" do
+        put :update, params: { id: @cat.to_param, cat: invalid_attributes}
+        @cat.reload
+        expect(assigns(:cat)).to_not be_valid
+      end
+      it "returns 1 error" do
+        put :update, params: { id: @cat.to_param, cat: invalid_attributes}
+        @cat.reload
+        expect(assigns(:cat).errors.size).to eq(1)
+      end
+      it "redirects to cats#edit" do
+        put :update, params: {id: @cat.to_param, cat: invalid_attributes}
+        expect(response).to render_template("edit")
       end
     end
   end
 
+   describe "DELETE #destroy" do
+    before(:each) do
+      @cat = Cat.create(valid_attributes)
+    end
+    it "destroys the requested cat" do
+      expect { delete :destroy, params: {id: @cat.to_param} }.to change(Cat, :count).by(-1)
+    end
+    it "redirects to cats#index" do
+      delete :destroy, params: {id: @cat.to_param}
+      expect(response).to redirect_to(cats_url)
+    end
 
+    # it "produces valid destroy flash message" do
+    #   delete :destroy, params: {id: @cat.to_param}
+    #   #expect(flash[:notice]).to match(I18n.t("user.user-account-deleted"))
+    # end
 
-  #   context "with invalid attributes" do
-  #     it "assigns the user" do
-  #       put :update, params: { id: user_bob.to_param, user: invalid_attributes}
-  #       user_bob.reload
-  #       expect(user_bob.first_name).to eq("Bob")
-  #     end
-  #     it "user is not valid" do
-  #       put :update, params: { id: user_bob.to_param, user: invalid_attributes}
-  #       user_bob.reload
-  #       expect(assigns(:user)).to_not be_valid
-  #     end
-  #     it "returns 1 error" do
-  #       put :update, params: { id: user_bob.to_param, user: invalid_attributes}
-  #       user_bob.reload
-  #       expect(assigns(:user).errors.size).to eq(1)
-  #     end
-  #     it "redirects to users#edit" do
-  #       put :update, params: {id: user_bob.to_param, user: invalid_attributes}
-  #       expect(response).to render_template("edit")
-  #     end
-  #   end
-  #
-  # end
+    # it "destory the picture" do
+    #   get :destroy_avatar, params: {id: @cat.to_param}
+    #   expect(assigns(:user).avatar_identifier).to eq(nil)
+    # end
 
-  #  describe "DELETE #destroy" do
-  #   it "destroys the requested user" do
-  #     expect { delete :destroy, params: {id: user_bob.to_param} }.to change(User, :count).by(-1)
-  #   end
-  #   it "redirects admin to users#index" do
-  #     delete :destroy, params: {id: user_bob.to_param}
-  #     expect(response).to redirect_to(users_url)
-  #   end
-  #   it "user deletes self" do
-  #     expect { delete :destroy, params: {id: @admin.to_param} }.to change(User, :count).by(-1)
-  #   end
-  #   it "ends user session when user deletes self" do
-  #     delete :destroy, params: {id: @admin.to_param}
-  #     expect(response).to redirect_to(new_user_session_url)
-  #   end
-  #   it "produces valid destroy flash message" do
-  #     delete :destroy, params: {id: user_bob.to_param}
-  #     expect(flash[:notice]).to match(I18n.t("user.user-account-deleted"))
-  #   end
-  #   it "fails to destroy user with dependent task" do
-  #     FactoryGirl.create(:task,reported_by:user_bob)
-  #     delete :destroy, params: {id: user_bob.to_param}
-  #     expect(assigns(:user).errors.messages[:base]).to match(["Cannot delete record because dependent reports exist"])
-  #   end
-  #   it "fails to destroy user with dependent comment" do
-  #     task_object = FactoryGirl.create(:task,reported_by:user_bob)
-  #     FactoryGirl.create(:comment,content: "stuff", user:user_bob, task: task_object)
-  #     delete :destroy, params: {id: user_bob.to_param}
-  #     expect(assigns(:user).errors.messages[:base]).to match(["Cannot delete record because dependent reports exist"])
-  #   end
-  #
-  #   it "destory the avatar" do
-  #     get :destroy_avatar, params: {id: @admin.to_param}
-  #     expect(assigns(:user).avatar_identifier).to eq(nil)
-  #   end
-  #
-  # end
+  end
 
 end
