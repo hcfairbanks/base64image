@@ -31,13 +31,8 @@
 #   books:
 #     create:
 #       success: Book created!
-#activerecord.successful.messages.created
 en:
   cat:
-    update:
-      success: "Your cat is good to meow."
-  activerecord:
-    models:
-      cat:
-        update:
-          success: Book created!
+    created: "You have an awesome new cat."
+    destroyed: "Cat was successfully retired."
+    updated: "Your mouser has been updated."

@@ -13,12 +13,20 @@ require 'carrierwave/test/matchers'
 # https://anti-pattern.com/transactional-fixtures-in-rails
 #https://blog.bigbinary.com/2016/05/26/rails-5-renamed-transactional-fixtures-to-transactional-tests.html
 
+# TODO
+# should I change image to picture ?
 RSpec.describe CatsController, type: :controller do
   include CarrierWave::Test::Matchers
-  file_path = File.join(Rails.root,"spec","fixtures","binaries","cat_images","cat_1.jpeg")
+  folder_path = File.join(Rails.root,"spec","fixtures","binaries","cat_images")
+
+  file_path = File.join(folder_path,"cat_1.jpeg")
+  file_path_update = File.join(folder_path,"cat_2.jpeg")
 
   cat_image = Base64.encode64(File.open(file_path).read)
+  cat_image_update = Base64.encode64(File.open(file_path_update).read)
   data_url = "data:image/jpeg;base64,#{cat_image}"
+  data_url_update = "data:image/jpeg;base64,#{cat_image_update}"
+
 
   let(:valid_attributes) {
     {
@@ -30,7 +38,7 @@ RSpec.describe CatsController, type: :controller do
   let(:update_attributes) {
     {
       name: "Mr. Fluffington",
-      picture: data_url
+      picture: data_url_update
     }
   }
 
@@ -81,18 +89,14 @@ RSpec.describe CatsController, type: :controller do
       #expect(FileUtils.identical?(created_img,comparison_image)).to be true
       expect(created_img).to be_identical_to(comparison_image)
     end
-    #     it "redirects to users#show" do
-    #       post :create, params: {user: valid_attributes}
-    #       expect(response).to redirect_to(User.last)
-    #     end
-    #     it "saves the new user avatar" do
-    #       post :create, params: {user: valid_attributes}
-    #       expect(assigns(:user).avatar_identifier).to eq("1.jpg")
-    #     end
-    #     it "produces valid create flash message" do
-    #       post :create, params: {user: valid_attributes}
-    #       expect(flash[:notice]).to match(I18n.t("user.successfully-created"))
-    #     end
+    it "redirects to cats#show" do # another one is needed for correct json return
+      post :create, params: {cat: valid_attributes}
+      expect(response).to redirect_to(Cat.last)
+    end
+    it "produces valid create flash message" do
+      post :create, params: {cat: valid_attributes}
+      expect(flash[:notice]).to match(I18n.t("cat.created"))
+    end
   end
 
   describe "GET #show cat" do
@@ -111,7 +115,7 @@ RSpec.describe CatsController, type: :controller do
   end
 
   describe "GET #new cat" do
-    it "assigns a new User to @user" do
+    it "assigns a new Cat to @cat" do
       get :new
       expect(assigns(:cat)).to be_a_new(Cat)
     end
@@ -156,17 +160,30 @@ RSpec.describe CatsController, type: :controller do
         put :update, params: {id: @cat.to_param, cat: update_attributes}
         expect(assigns(:cat)).to be_valid
       end
-      # it "updates the requested cats image" do
-      #   put :update, params: {id: user_bob.to_param, user: update_valid_attributes}
-      #   expect(assigns(:user).avatar_identifier).to eq("2.jpg")
-      # end
+      it "obfuscates the image name in the directory" do
+        put :update, params: {id: @cat.to_param, cat: update_attributes}
+        expect(assigns(:cat).picture_identifier).to_not eq("cat_2.jpeg")
+      end
+      it "updates the requested cats image" do
+        put :update, params: {id: @cat.to_param, cat: update_attributes}
+        expect(assigns(:cat).picture_identifier).to_not eq("cat_2.jpeg")
+        updated_img = File.join(Rails.root,"public","#{assigns(:cat).picture}")
+        updated_comparison_img = File.join( Rails.root,
+                                      "spec",
+                                      "fixtures","binaries",
+                                      "cat_comparison_images",
+                                      "cat_uploaded_update.jpeg")
+        expect(updated_img).to be_identical_to(updated_comparison_img)
+
+
+      end
       it "redirects to cats#show" do
         put :update, params: {id: @cat.to_param, cat: update_attributes}
         expect(response).to redirect_to(@cat)
       end
       it "produces valid update flash message" do
         put :update, params: {id: @cat.to_param, cat: update_attributes}
-        expect(flash[:notice]).to match(I18n.t("cat.update.success"))
+        expect(flash[:notice]).to match(I18n.t("cat.updated"))
       end
     end
 
@@ -177,9 +194,9 @@ RSpec.describe CatsController, type: :controller do
       it "assigns the cat" do
         put :update, params: { id: @cat.to_param, cat: invalid_attributes}
         @cat.reload
-        expect(@cat.name).to eq("Mr. Fluffy Bottom")
+        expect(@cat.name).to eq(valid_attributes[:name])
       end
-      it "user is not valid" do
+      it "cat is not valid" do
         put :update, params: { id: @cat.to_param, cat: invalid_attributes}
         @cat.reload
         expect(assigns(:cat)).to_not be_valid
@@ -208,15 +225,17 @@ RSpec.describe CatsController, type: :controller do
       expect(response).to redirect_to(cats_url)
     end
 
-    # it "produces valid destroy flash message" do
-    #   delete :destroy, params: {id: @cat.to_param}
-    #   #expect(flash[:notice]).to match(I18n.t("user.user-account-deleted"))
-    # end
+    it "produces valid destroy flash message" do
+      delete :destroy, params: {id: @cat.to_param}
+      expect(flash[:notice]).to match(I18n.t("cat.destroyed"))
+    end
 
-    # it "destory the picture" do
-    #   get :destroy_avatar, params: {id: @cat.to_param}
-    #   expect(assigns(:user).avatar_identifier).to eq(nil)
-    # end
+    it "destory the picture" do # might be good just to leave this stuff in the uploader specs
+      cat_img = File.join(Rails.root,"public","#{@cat.picture}")
+      get :destroy, params: {id: @cat.to_param}
+      result = File.exist? File.expand_path cat_img
+      expect(result).to be false
+    end
 
   end
 
