@@ -97,6 +97,25 @@ RSpec.describe CatsController, type: :controller do
       post :create, params: {cat: valid_attributes}
       expect(flash[:notice]).to match(I18n.t("cat.created"))
     end
+
+      context "with invalid attributes" do
+        it "does not save the new cat in the database" do
+          expect { post :create, params: {cat: invalid_attributes}}.to change(Cat, :count).by(0)
+        end
+        it "re-renders the :new template" do
+          post :create, params: {cat: invalid_attributes}
+          expect(response).to render_template(:new)#render(new_cat_path)
+        end
+        it "produces correct error message" do
+          post :create, params: {cat: invalid_attributes}
+          expect(assigns(:cat).errors.messages[:name]).to eq(["can't be blank"])
+        end
+        it "produces  1 error" do
+          post :create, params: {cat: invalid_attributes}
+          expect(assigns(:cat).errors.size).to eq(1)
+        end
+      end
+
   end
 
   describe "GET #show cat" do
@@ -138,18 +157,6 @@ RSpec.describe CatsController, type: :controller do
       expect(response).to render_template("edit")
     end
   end
-  # describe "POST #create user" do
-  #   context "with invalid attributes" do
-  #     it "does not save the new user in the database" do
-  #       expect { post :create, params: {user: invalid_attributes}}.to change(User, :count).by(0)
-  #     end
-  #     it "re-renders the :new template" do
-  #       post :create, params: {user: invalid_attributes}
-  #       expect(response).to redirect_to("/new_user_no_devise")
-  #     end
-  #   end
-
-  # end
 
   describe "PUT #update cat" do
     before(:each) do
