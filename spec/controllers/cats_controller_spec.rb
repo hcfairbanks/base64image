@@ -66,32 +66,6 @@ RSpec.describe CatsController, type: :controller do
         expect { post :create, params: {cat: valid_attributes} }.to change(Cat, :count).by(1)
       end
 
-      it "creates a new image in the directory" do
-        post :create, params: {cat: valid_attributes}
-        created_file_path = File.join(Rails.root,
-                                      "public","#{assigns(:cat).picture}")
-        result = File.exist? File.expand_path created_file_path
-        expect(result).to be true
-      end
-
-      # This might be better in the uploader spec
-      # might need one for thumbnail
-      it "processes the image to the proper size" do
-        post :create, params: {cat: valid_attributes}
-        created_img = File.join(Rails.root,"public","#{assigns(:cat).picture}")
-        expect(File.size(created_img)).to eq(80467)
-      end
-
-      # This might be better in the uploader spec
-      it "produces image identical to expected image" do
-        post :create, params: {cat: valid_attributes}
-        created_img = File.join(Rails.root,"public","#{assigns(:cat).picture}")
-        comparison_image = File.join( Rails.root,
-                                      "spec","fixtures","binaries",
-                                      "cat_comparison_images","cat_uploaded.jpeg")
-        expect(created_img).to be_identical_to(comparison_image)
-      end
-
       it "redirects to cats#show" do # another one is needed for correct json return
         post :create, params: {cat: valid_attributes}
         expect(response).to redirect_to(Cat.last)
@@ -172,27 +146,12 @@ RSpec.describe CatsController, type: :controller do
         put :update, params: {id: @cat.to_param, cat: update_attributes}
         expect(assigns(:cat)).to be_valid
       end
-      it "obfuscates the image name in the directory" do
-        put :update, params: {id: @cat.to_param, cat: update_attributes}
-        expect(assigns(:cat).picture_identifier).to_not eq("cat_2.jpeg")
-      end
-      it "updates the requested cat image" do
-        put :update, params: {id: @cat.to_param, cat: update_attributes}
-        expect(assigns(:cat).picture_identifier).to_not eq("cat_2.jpeg")
-        updated_img = File.join(Rails.root,"public","#{assigns(:cat).picture}")
-        updated_comparison_img = File.join( Rails.root,
-                                      "spec",
-                                      "fixtures","binaries",
-                                      "cat_comparison_images",
-                                      "cat_uploaded_update.jpeg")
-        expect(updated_img).to be_identical_to(updated_comparison_img)
 
-
-      end
       it "redirects to cats#show" do
         put :update, params: {id: @cat.to_param, cat: update_attributes}
         expect(response).to redirect_to(@cat)
       end
+
       it "produces valid update flash message" do
         put :update, params: {id: @cat.to_param, cat: update_attributes}
         expect(flash[:notice]).to match(I18n.t("cat.updated"))
@@ -232,14 +191,6 @@ RSpec.describe CatsController, type: :controller do
     it "produces valid destroy flash message" do
       delete :destroy, params: {id: @cat.to_param}
       expect(flash[:notice]).to match(I18n.t("cat.destroyed"))
-    end
-
-    # might be good just to leave this stuff in the uploader specs
-    it "removes the image from the directory" do
-      cat_img = File.join(Rails.root,"public","#{@cat.picture}")
-      get :destroy, params: {id: @cat.to_param}
-      result = File.exist? File.expand_path cat_img
-      expect(result).to be false
     end
 
   end

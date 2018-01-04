@@ -39,10 +39,28 @@ describe "Picture Uploader" do
   it "makes the image readable only to the owner and not executable" do
     expect(uploader).to have_permissions(0600)
   end
+
+  # it "makes the image readable only to the owner and not executable" do
+  #   expect(uploader).to have_permissions(0600)
+  # end
+
   it "is the same as the expected thumbnail file" do
     comparison_file = File.join(Rails.root,"spec","fixtures","binaries","cat_comparison_images","thumb.jpeg")
     expect(uploader.thumb.current_path).to be_identical_to(comparison_file)
   end
+
+  # This might be better in the uploader spec
+  # might need one for thumbnail
+  # it "processes the image to the proper size" do
+  #   post :create, params: {cat: valid_attributes}
+  #   created_img = File.join(Rails.root,"public","#{assigns(:cat).picture}")
+  #   expect(File.size(created_img)).to eq(80467)
+  # end
+
+  # it "obfuscates the image name in the directory" do
+  #   put :update, params: {id: @cat.to_param, cat: update_attributes}
+  #   expect(assigns(:cat).picture_identifier).to_not eq("cat_2.jpeg")
+  # end
 
   it "is the same as the expected file" do
     comparison_file = File.join(Rails.root,"spec","fixtures","binaries","cat_comparison_images","cat_uploaded.jpeg")
