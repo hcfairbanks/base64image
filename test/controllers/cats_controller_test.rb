@@ -14,6 +14,14 @@ class CatsControllerTest < ActionDispatch::IntegrationTest
   #   }
   # }
 
+# check in spec/models/cat_spec.rb#update spec
+# result = FileUtils.compare_file(updated_img,updated_comparison_img)
+# expect(result).to be true
+
+
+
+
+
 
   setup do # before each
     # DatabaseCleaner.start
@@ -52,7 +60,7 @@ class CatsControllerTest < ActionDispatch::IntegrationTest
     post cats_url, params: { cat: { name: @cat.name, picture: @cat.picture } }
     created_file_path = File.join(Rails.root,
                                   "public","#{assigns(:cat).picture}")
-    #expect(FileUtils.identical?(created_img,comparison_image)).to be true                                  
+    #expect(FileUtils.identical?(created_img,comparison_image)).to be true
     result = File.exist? File.expand_path created_file_path
     assert(result) #be true
   end

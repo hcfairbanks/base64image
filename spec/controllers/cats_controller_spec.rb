@@ -13,6 +13,13 @@ require 'carrierwave/test/matchers'
 # https://anti-pattern.com/transactional-fixtures-in-rails
 #https://blog.bigbinary.com/2016/05/26/rails-5-renamed-transactional-fixtures-to-transactional-tests.html
 
+
+# https://www.axiomq.com/blog/rspec-and-factorygirl-setup-for-testing-carrierwave-uploaders/
+# https://github.com/carrierwaveuploader/carrierwave/wiki/How-to:-Use-test-factories
+# https://groups.google.com/forum/#!msg/carrierwave/z1K0NTCEtik/f-_wniYpVC8J
+# https://stackoverflow.com/questions/15552965/carrierwave-be-identical-to-helper-not-working-in-rspec
+
+
 # TODO
 # should I change image to picture ?
 RSpec.describe CatsController, type: :controller do

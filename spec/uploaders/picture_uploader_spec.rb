@@ -3,11 +3,6 @@ require 'rails_helper'
 require 'spec_helper'
 require 'base64'
 
-# https://www.axiomq.com/blog/rspec-and-factorygirl-setup-for-testing-carrierwave-uploaders/
-# https://github.com/carrierwaveuploader/carrierwave/wiki/How-to:-Use-test-factories
-# https://groups.google.com/forum/#!msg/carrierwave/z1K0NTCEtik/f-_wniYpVC8J
-# https://stackoverflow.com/questions/15552965/carrierwave-be-identical-to-helper-not-working-in-rspec
-
 describe "Picture Uploader" do
   include CarrierWave::Test::Matchers
 
