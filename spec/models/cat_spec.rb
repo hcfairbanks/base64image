@@ -34,68 +34,68 @@ RSpec.describe Cat, type: :model do
     }
   }
 
-    it "is valid with a name and an image" do
+  it "is valid with valid attributes" do
+    cat = Cat.create(valid_attributes)
+    expect(cat).to be_valid
+  end
+
+  it "creates a new image in the directory" do
+    cat = Cat.create(valid_attributes)
+    created_file_path = File.join(Rails.root,
+                                  "public","#{cat.picture}")
+    result = File.exist? File.expand_path created_file_path
+    expect(result).to be true
+  end
+
+  it "is not valid without a name" do
+    expect(Cat.create(invalid_attributes)).to be_invalid
+  end
+
+  it "fails with correct blank name error msg" do
+    cat = Cat.create(invalid_attributes)
+    expect(cat.errors[:name]).to include("can't be blank")
+  end
+
+  it "updates with valid attributes" do
+    cat = Cat.create(valid_attributes)
+    cat.update(update_attributes)
+    cat.reload
+    expect(cat).to be_valid
+  end
+
+  it "updates the cat image" do
+    cat = Cat.create(valid_attributes)
+    cat.update(update_attributes)
+    updated_img = File.join(Rails.root,"public","#{cat.picture}")
+    updated_comparison_img = File.join( Rails.root,
+                                  "spec",
+                                  "fixtures","binaries",
+                                  "cat_comparison_images",
+                                  "cat_uploaded_update.jpeg")
+    expect(updated_img).to be_identical_to(updated_comparison_img)
+  end
+
+  describe "#destroy," do
+
+    it "decreases the cat count by 1" do
       cat = Cat.create(valid_attributes)
-      expect(cat).to be_valid
+      expect {Cat.destroy(cat.id)}.to change(Cat, :count).by(-1)
     end
 
-    it "is invalid without a name" do
-      expect(Cat.create(invalid_attributes)).to be_invalid
-    end
-
-    it "returns the correct error msg" do
-      cat = Cat.create(invalid_attributes)
-      expect(cat.errors[:name]).to include("can't be blank")
-    end
-
-    it "creates a new image in the directory" do
+    it "completely removes the cat from the db" do
       cat = Cat.create(valid_attributes)
-      created_file_path = File.join(Rails.root,
-                                    "public","#{cat.picture}")
-      result = File.exist? File.expand_path created_file_path
-      expect(result).to be true
+      Cat.destroy(cat.id)
+      expect(Cat.where(id: cat.id).count).to eq(0)
     end
 
-    it "can update with valid attributes" do
+    it "removes the image from the directory" do
       cat = Cat.create(valid_attributes)
-      cat.update(update_attributes)
-      cat.reload
-      expect(cat).to be_valid
+      cat_img = File.join(Rails.root,"public","#{cat.picture}")
+      Cat.destroy(cat.id)
+      result = File.exist? File.expand_path cat_img
+      expect(result).to be false
     end
 
-    it "updates the requested cat image" do
-      cat = Cat.create(valid_attributes)
-      cat.update(update_attributes)
-      updated_img = File.join(Rails.root,"public","#{cat.picture}")
-      updated_comparison_img = File.join( Rails.root,
-                                    "spec",
-                                    "fixtures","binaries",
-                                    "cat_comparison_images",
-                                    "cat_uploaded_update.jpeg")
-      expect(updated_img).to be_identical_to(updated_comparison_img)
-    end
-
-    describe "#destroy" do
-
-      it "decreases the cat count by 1" do
-        cat = Cat.create(valid_attributes)
-        expect {Cat.destroy(cat.id)}.to change(Cat, :count).by(-1)
-      end
-
-      it "completely removes the cat from the db" do
-        cat = Cat.create(valid_attributes)
-        Cat.destroy(cat.id)
-        expect(Cat.where(id: cat.id).count).to eq(0)
-      end
-
-      it "removes the image from the directory" do
-        cat = Cat.create(valid_attributes)
-        cat_img = File.join(Rails.root,"public","#{cat.picture}")
-        Cat.destroy(cat.id)
-        result = File.exist? File.expand_path cat_img
-        expect(result).to be false
-      end
-
-    end
+  end
 
 end

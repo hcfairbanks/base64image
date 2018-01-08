@@ -20,8 +20,9 @@ require 'carrierwave/test/matchers'
 # https://stackoverflow.com/questions/15552965/carrierwave-be-identical-to-helper-not-working-in-rspec
 
 
-# TODO
-# should I change image to picture ?
+#http://www.betterspecs.org/
+#https://leanpub.com/everydayrailsrspec
+
 RSpec.describe CatsController, type: :controller do
   include CarrierWave::Test::Matchers
   folder_path = File.join(Rails.root,"spec","fixtures","binaries","cat_images")
@@ -73,7 +74,7 @@ RSpec.describe CatsController, type: :controller do
         expect { post :create, params: {cat: valid_attributes} }.to change(Cat, :count).by(1)
       end
 
-      it "redirects to cats#show" do # another one is needed for correct json return
+      it "redirects to cats#show" do
         post :create, params: {cat: valid_attributes}
         expect(response).to redirect_to(Cat.last)
       end
@@ -90,7 +91,7 @@ RSpec.describe CatsController, type: :controller do
       end
       it "re-renders the :new template" do
         post :create, params: {cat: invalid_attributes}
-        expect(response).to render_template(:new)#render(new_cat_path)
+        expect(response).to render_template(:new)
       end
       it "produces correct error message" do
         post :create, params: {cat: invalid_attributes}
