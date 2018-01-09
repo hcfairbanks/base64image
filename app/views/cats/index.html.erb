@@ -30,9 +30,13 @@
   </tbody>
 </table>
 
-<br>
+<br/>
 
-<%= link_to 'New cat', new_cat_path %>
+<%= link_to "Refresh Cats Index", cats_url %>
+
+<br/>
+
+<h2>Create a new cat here</h2>
 <script>
   function send_docs(e){
     var reader = new FileReader()
@@ -63,7 +67,7 @@
           }
       });
 
-    }; //End of encoding
+    };
 
   };
 </script>
