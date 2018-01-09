@@ -56,23 +56,27 @@ RSpec.describe Cat, type: :model do
     expect(cat.errors[:name]).to include("can't be blank")
   end
 
-  it "updates with valid attributes" do
-    cat = Cat.create(valid_attributes)
-    cat.update(update_attributes)
-    cat.reload
-    expect(cat).to be_valid
-  end
+  context "#update" do
 
-  it "updates the cat image" do
-    cat = Cat.create(valid_attributes)
-    cat.update(update_attributes)
-    updated_img = File.join(Rails.root,"public","#{cat.picture}")
-    updated_comparison_img = File.join( Rails.root,
-                                  "spec",
-                                  "fixtures","binaries",
-                                  "cat_comparison_images",
-                                  "cat_uploaded_update.jpeg")
-    expect(updated_img).to be_identical_to(updated_comparison_img)
+    it "is valid with valid attributes" do
+      cat = Cat.create(valid_attributes)
+      cat.update(update_attributes)
+      cat.reload
+      expect(cat).to be_valid
+    end
+
+    it "has a valid updated image" do
+      cat = Cat.create(valid_attributes)
+      cat.update(update_attributes)
+      updated_img = File.join(Rails.root,"public","#{cat.picture}")
+      updated_comparison_img = File.join( Rails.root,
+                                    "spec",
+                                    "fixtures","binaries",
+                                    "cat_comparison_images",
+                                    "cat_uploaded_update.jpeg")
+      expect(updated_img).to be_identical_to(updated_comparison_img)
+    end
+
   end
 
   describe "#destroy," do

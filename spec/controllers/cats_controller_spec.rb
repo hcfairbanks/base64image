@@ -2,26 +2,6 @@ require 'rails_helper'
 require 'spec_helper'
 require 'base64'
 require 'carrierwave/test/matchers'
-#https://til.codes/testing-carrierwave-file-uploads-with-rspec-and-factorygirl/
-#READ THIS
-#https://relishapp.com/rspec/rspec-core/v/2-0/docs/hooks/before-and-after-hooks
-# minitest
-# http://guides.rubyonrails.org/testing.html#rails-sets-up-for-testing-from-the-word-go
-# Testing Philosophy
-# https://www.youtube.com/watch?v=z9quxZsLcfo&feature=youtu.be
-# You dont need database_cleaner
-# https://anti-pattern.com/transactional-fixtures-in-rails
-#https://blog.bigbinary.com/2016/05/26/rails-5-renamed-transactional-fixtures-to-transactional-tests.html
-
-
-# https://www.axiomq.com/blog/rspec-and-factorygirl-setup-for-testing-carrierwave-uploaders/
-# https://github.com/carrierwaveuploader/carrierwave/wiki/How-to:-Use-test-factories
-# https://groups.google.com/forum/#!msg/carrierwave/z1K0NTCEtik/f-_wniYpVC8J
-# https://stackoverflow.com/questions/15552965/carrierwave-be-identical-to-helper-not-working-in-rspec
-
-
-#http://www.betterspecs.org/
-#https://leanpub.com/everydayrailsrspec
 
 RSpec.describe CatsController, type: :controller do
   include CarrierWave::Test::Matchers
@@ -32,8 +12,9 @@ RSpec.describe CatsController, type: :controller do
 
   cat_image = Base64.encode64(File.open(file_path).read)
   cat_image_update = Base64.encode64(File.open(file_path_update).read)
-  data_url = "data:image/jpeg;base64,#{cat_image}"
-  data_url_update = "data:image/jpeg;base64,#{cat_image_update}"
+  url_header = "data:image/jpeg;base64"
+  data_url = "#{url_header},#{cat_image}"
+  data_url_update = "#{url_header},#{cat_image_update}"
 
 
   let(:valid_attributes) {
