@@ -2,7 +2,7 @@ require 'test_helper'
 require 'minitest/autorun'
 
 # https://github.com/metaskills/minitest-spec-rails
-class MyJobTest < ActiveSupport::TestCase
+class PictureUploaderTest < ActiveSupport::TestCase
 
 # http://guides.rubyonrails.org/testing.html
 # look up
