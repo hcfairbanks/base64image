@@ -53,7 +53,7 @@ include Magick
     # compressed_file_size = '%.2f' % (File.size("Compressed/#{project}.tar.bz2").to_f / 2**20)
     # compressed_file_size = (File.size("Compressed/#{project}.tar.bz2").to_f / 2**20).round(2)
 
-
+    puts File.extname(created_file_path)
 
     puts "*" * 20
 
@@ -66,6 +66,8 @@ include Magick
 # file identical
 # file size
 # permissions on file
+# File extention
+# height and width
 
 
 
