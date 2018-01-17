@@ -176,3 +176,35 @@ run single minitest
 rails test test/controllers/cats_controller_test.rb:9
 run single rspec test
 rspec spec/controllers/cats_controller_spec.rb:8
+
+
+# Image minitest notes
+
+# General
+# http://www.rubydoc.info/github/carrierwaveuploader/carrierwave/CarrierWave/Test/Matchers/MagickWrapper#height-instance_method
+# This link is from the matchers for rspec, as you can see, I use the same methode here in minitest
+# http://guides.rubyonrails.org/testing.html
+# https://github.com/metaskills/minitest-spec-rails
+
+
+# File Size
+# https://stackoverflow.com/questions/6215889/getting-accurate-file-size-in-megabytes
+
+# permissions links
+# http://rubyforadmins.com/files-and-directories
+# http://www.alberts.me/post/checking-file-permissions-with-ruby/
+# https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
+# https://ruby-doc.org/core-1.9.3/File/Stat.html
+
+# permissions in carrierwave matchers
+# https://github.com/carrierwaveuploader/carrierwave/blob/master/lib/carrierwave/test/matchers.rb
+
+# Image Dimensions
+# https://stackoverflow.com/questions/16266933/rmagick-how-do-i-find-out-the-pixel-dimension-of-an-image
+
+# Minitest fixtures yamls
+# http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+make custom assertions
+
+https://chriskottom.com/blog/2014/08/customize-minitest-assertions-and-expectations/

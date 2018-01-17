@@ -2,41 +2,19 @@ require 'test_helper'
 
 class CatsControllerTest < ActionDispatch::IntegrationTest
 
-  file_path = File.join(Rails.root,"spec","fixtures","binaries","cat_images","cat_1.jpeg")
+  file_path = File.join( Rails.root,
+                         "test",
+                         "fixtures",
+                         "files",
+                         "cat_images",
+                         "cat_1.jpeg")
 
-  cat_image = Base64.encode64(File.open(file_path).read)
-  data_url = "data:image/jpeg;base64,#{cat_image}"
+  data_url  = "data:image/jpeg;base64,"
+  data_url += Base64.encode64(File.open(file_path).read)
 
-  # let(:valid_attributes) {
-  #   {
-  #     name: "Mr. Fluffy Bottom",
-  #     picture: data_url
-  #   }
-  # }
-
-# check in spec/models/cat_spec.rb#update spec
-# result = FileUtils.compare_file(updated_img,updated_comparison_img)
-# expect(result).to be true
-
-
-
-
-
-
-  setup do # before each
-    # DatabaseCleaner.start
-    # DatabaseCleaner.clean
+  setup do
     @cat = Cat.create!(name: "Mr. Fluffy Bottom", picture: data_url)
     @cat.save!
-#byebug
-    # in the test_helper.rb the line
-    # fixtures :all
-    # will create entries into the db
-    # this messes with the db cleaner
-  end
-  teardown do # before each
-  #  DatabaseCleaner.start
-  #  DatabaseCleaner.clean
   end
 
   test "should get index" do
@@ -60,9 +38,8 @@ class CatsControllerTest < ActionDispatch::IntegrationTest
     post cats_url, params: { cat: { name: @cat.name, picture: @cat.picture } }
     created_file_path = File.join(Rails.root,
                                   "public","#{assigns(:cat).picture}")
-    #expect(FileUtils.identical?(created_img,comparison_image)).to be true
     result = File.exist? File.expand_path created_file_path
-    assert(result) #be true
+    assert(result)
   end
 
   test "should show cat" do
@@ -76,8 +53,20 @@ class CatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update cat" do
-    patch cat_url(@cat), params: { cat: { name: @cat.name, picture: @cat.picture } }
+    file_path = File.join( Rails.root,
+                           "test",
+                           "fixtures",
+                           "files",
+                           "cat_images",
+                           "cat_2.jpeg")
+
+    data_url  = "data:image/jpeg;base64,"
+    data_url += Base64.encode64(File.open(file_path).read)
+
+    patch cat_url(@cat), params: { cat: { name: "Mr Snuggles", picture: data_url } }
     assert_redirected_to cat_url(@cat)
+    assert(assigns(:cat).valid?)
+    assert_equal([],assigns(:cat).errors.full_messages)
   end
 
   test "should destroy cat" do
