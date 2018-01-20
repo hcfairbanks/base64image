@@ -37,41 +37,6 @@
 <br/>
 
 <h2>Create a new cat here</h2>
-<script>
-  function send_docs(e){
-    var reader = new FileReader()
-    var files = document.getElementById('picture').files;
-    var name = document.getElementById('name').value
-    var reader = new FileReader();
-    reader.readAsDataURL(files[0]);
-
-    reader.onload = function () {
-      base64string = reader.result
-      console.log(base64string);
-      info = {cat:{
-               name: name,
-               picture: base64string
-             }};
-
-      $.ajax({
-          url: "http://localhost:3000/cats/",
-          type: "POST",
-          dataType: "JSON",
-          data: info,
-          success: function (response) {
-            // You can see the full response object in
-            // Chrome developer tools, console
-            // console.log(response)
-            alert("Name: " + response.name + " ID:" + response.id );
-            $('#string_image_form').trigger("reset");
-          }
-      });
-
-    };
-
-  };
-</script>
-
 
 <form id='string_image_form' onsubmit="send_docs(this); return false;">
   <label for="name">Name</label>

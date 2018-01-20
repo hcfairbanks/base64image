@@ -1,26 +1,4 @@
-#https://til.codes/testing-carrierwave-file-uploads-with-rspec-and-factorygirl/
-#READ THIS
-#https://relishapp.com/rspec/rspec-core/v/2-0/docs/hooks/before-and-after-hooks
-# minitest
-# http://guides.rubyonrails.org/testing.html#rails-sets-up-for-testing-from-the-word-go
-# Testing Philosophy
-# https://www.youtube.com/watch?v=z9quxZsLcfo&feature=youtu.be
-# You dont need database_cleaner
-# https://anti-pattern.com/transactional-fixtures-in-rails
-#https://blog.bigbinary.com/2016/05/26/rails-5-renamed-transactional-fixtures-to-transactional-tests.html
 
-
-# https://www.axiomq.com/blog/rspec-and-factorygirl-setup-for-testing-carrierwave-uploaders/
-# https://github.com/carrierwaveuploader/carrierwave/wiki/How-to:-Use-test-factories
-# https://groups.google.com/forum/#!msg/carrierwave/z1K0NTCEtik/f-_wniYpVC8J
-# https://stackoverflow.com/questions/15552965/carrierwave-be-identical-to-helper-not-working-in-rspec
-
-
-#http://www.betterspecs.org/
-#https://leanpub.com/everydayrailsrspec
-
-# README
-# TEST
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
@@ -49,17 +27,33 @@ A. base64 image straight to rails
 B. base64 Carrierwave
 c. Rspec tests for both
 
+This application is a guide for those wanting to know how to use and test carrierwave with carrierwave-base64.
+With this you can convert an image into a base64 string and send it through an ajax call.
+There are many things you can do with this. It allows alot of flexability with your front end.
+Although I do not cover it here, you can create gui's that allow for multiple image uploads with a preview before editing.
+You can delete these preview before uploading. This is done on many websites. I plan on covering this in a later application.
+for now you can research it here .
 
+https://github.com/kripken/sql.js/wiki/Display-an-image-stored-in-a-BLOB-in-a-browser  
+
+
+What follows are the instructions used to create this application.
+
+0. Dependiencies
+These instructions are Ubuntu specific, but should work for any debian based linux OS.
+You will need to install the following dependiencies.
+
+sudo apt-get install imagemagick libmagickwand-dev
 
 1. add gems to gem file and install
 
  gem 'carrierwave', '~> 1.0'
  gem 'carrierwave-base64'
 
- 2. add line to config/application.rb
+ 2. add ``require 'carrierwave' `` to config/application.rb
+    so it looks like this.
 
- `` require 'carrierwave' ``
-
+ ``require 'carrierwave' ``
  ``require_relative 'boot'
 
  require 'rails/all'
@@ -78,34 +72,60 @@ c. Rspec tests for both
 ``
 
 
-  3. Generate scafold
+3. Generate the cat scafold
 
 rails g scaffold Cat name:string picture:string
 
-4. Generate uploader
+4. Generate an uploader
 
 rails generate uploader Picture
 
-
-5. add line to cat model
+5. Add line to cat model
 ``  mount_base64_uploader :picture, PictureUploader``
+So that it looks like the following
 
 ```
 class Cat < ApplicationRecord
   mount_base64_uploader :picture, PictureUploader
 end
+
+7. In your cats model ensure that you remove
+the folder structure of the file after deleting it with an after_destroy.
+Carrierwave has a bad habbit of leaving empty folders around.
+I have also added some basic validation too.
+
+It should look something like this
+
+class Cat < ApplicationRecord
+
+  mount_base64_uploader :picture, PictureUploader
+  validates :name, presence: true
+  after_destroy :remove_picture_directory
+
+  protected
+
+  def remove_picture_directory
+    FileUtils.remove_dir(File.join(Rails.root,
+                                  "public",
+                                  "uploads",
+                                  Rails.env,
+                                  "cat",
+                                  "picture",
+                                  self.id.to_s), force: true)
+  end
+
+end
 ```
 
-6.  add a ajax post, something like whats on the cat index page
-```<p id="notice"><%= notice %></p>
-
-<h1>Cats</h1>
-
+6. adjust the cats index table so you can see your images.
+```
 <table>
   <thead>
     <tr>
+      <th>Image</th>
       <th>Name</th>
-      <th>Picture</th>
+      <th>Picture Location</th>
+      <th>Picture Name</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -113,8 +133,12 @@ end
   <tbody>
     <% @cats.each do |cat| %>
       <tr>
+        <td>
+          <%= image_tag(cat.picture.thumb, alt: "Cat Thumbnail Picture") %>
+        </td>
         <td><%= cat.name %></td>
         <td><%= cat.picture %></td>
+        <td><%= cat.picture_identifier %></td>
         <td><%= link_to 'Show', cat %></td>
         <td><%= link_to 'Edit', edit_cat_path(cat) %></td>
         <td><%= link_to 'Destroy', cat, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -122,11 +146,25 @@ end
     <% end %>
   </tbody>
 </table>
+```
 
-<br>
 
-<%= link_to 'New cat', new_cat_path %>
-<script>
+7. Add a refresh button so you can see your work after you upload
+
+<%= link_to "Refresh Cats Index", cats_url %>
+
+8. Add a form to the cats index view
+app/views/cats/index.html.erb
+
+<form onsubmit="return send_docs(this)">
+  <input type="file" name="file" id="picture">
+  <input type="submit">
+</form>
+
+
+9. Add a javascript function to hanndle the ajax post
+app/assets/javascript/cats.js
+
   function send_docs(e){
     var reader = new FileReader()
     var files = document.getElementById('picture').files;
@@ -154,57 +192,22 @@ end
     }; //End of encoding
 
   };
-</script>
-
-
-<form onsubmit="return send_docs(this)">
-  <input type="file" name="file" id="picture">
-  <input type="submit">
-</form>
 ```
+
 
 7. run migrations
 rails db:create db:migrate
 
 8. boot application and take it for a spin
 
-9. right rspec tests
-
+9. Included in this application are test examples.
+  Carrierwave has some rspec tests made for it.
+  For minitest I created a sample.
+  These minitest samples were made by reverse engineering the rspec tests.
+  I plane on making custom asserts for minitest in the near future.
 
 -----------------
-run single minitest
+run a single minitest test
 rails test test/controllers/cats_controller_test.rb:9
-run single rspec test
+run a single rspec spec
 rspec spec/controllers/cats_controller_spec.rb:8
-
-
-# Image minitest notes
-
-# General
-# http://www.rubydoc.info/github/carrierwaveuploader/carrierwave/CarrierWave/Test/Matchers/MagickWrapper#height-instance_method
-# This link is from the matchers for rspec, as you can see, I use the same methode here in minitest
-# http://guides.rubyonrails.org/testing.html
-# https://github.com/metaskills/minitest-spec-rails
-
-
-# File Size
-# https://stackoverflow.com/questions/6215889/getting-accurate-file-size-in-megabytes
-
-# permissions links
-# http://rubyforadmins.com/files-and-directories
-# http://www.alberts.me/post/checking-file-permissions-with-ruby/
-# https://askubuntu.com/questions/152001/how-can-i-get-octal-file-permissions-from-command-line
-# https://ruby-doc.org/core-1.9.3/File/Stat.html
-
-# permissions in carrierwave matchers
-# https://github.com/carrierwaveuploader/carrierwave/blob/master/lib/carrierwave/test/matchers.rb
-
-# Image Dimensions
-# https://stackoverflow.com/questions/16266933/rmagick-how-do-i-find-out-the-pixel-dimension-of-an-image
-
-# Minitest fixtures yamls
-# http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-make custom assertions
-
-https://chriskottom.com/blog/2014/08/customize-minitest-assertions-and-expectations/
