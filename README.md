@@ -74,28 +74,28 @@ sudo apt-get install imagemagick libmagickwand-dev
 
 3. Generate the cat scafold
 
-rails g scaffold Cat name:string picture:string
+```rails g scaffold Cat name:string picture:string```
 
 4. Generate an uploader
 
 rails generate uploader Picture
 
 5. Add line to cat model
-``  mount_base64_uploader :picture, PictureUploader``
+```  mount_base64_uploader :picture, PictureUploader```
 So that it looks like the following
 
 ```
 class Cat < ApplicationRecord
   mount_base64_uploader :picture, PictureUploader
 end
-
+```
 7. In your cats model ensure that you remove
 the folder structure of the file after deleting it with an after_destroy.
 Carrierwave has a bad habbit of leaving empty folders around.
 I have also added some basic validation too.
 
 It should look something like this
-
+```
 class Cat < ApplicationRecord
 
   mount_base64_uploader :picture, PictureUploader
