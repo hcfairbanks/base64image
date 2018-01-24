@@ -169,8 +169,8 @@ Included in this application are test examples.
 Carrierwave has some rspec tests made for it.
 For minitest I created a sample.
 These minitest samples were made by reverse engineering the rspec tests.
-I plane on making custom asserts for minitest in the near future.
------------------
+I plan on making custom asserts for minitest in the near future.
+
 ### Running single tests 
 
 run a single minitest test
