@@ -6,7 +6,7 @@ require 'base64'
 describe "Picture Uploader" do
   include CarrierWave::Test::Matchers
 
-  let(:cat) { FactoryGirl.create(:cat) }
+  let(:cat) { FactoryBot.create(:cat) }
   let(:uploader) { PictureUploader.new(cat, :picture) }
 
   before do

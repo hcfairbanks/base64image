@@ -41,7 +41,7 @@ gem 'jbuilder', '~> 2.5'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'byebug', platform: :mri
   gem 'rails-controller-testing'
   gem 'rspec-rails'

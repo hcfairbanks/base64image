@@ -5,7 +5,7 @@ imag_path = Rails.root.join('spec',
                             'cat_images',
                             'cat_1.jpeg')
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :cat do
     name "Fluffy"
     picture { Rack::Test::UploadedFile.new(Rails.root.join( imag_path),
