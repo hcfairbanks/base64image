@@ -164,6 +164,7 @@ end
 ### 12. boot application and take it for a spin
 
 ### Testing
+
 Included in this application are test examples.
 Carrierwave has some rspec tests made for it.
 For minitest I created a sample.
@@ -171,6 +172,7 @@ These minitest samples were made by reverse engineering the rspec tests.
 I plane on making custom asserts for minitest in the near future.
 -----------------
 ### Running single tests 
+
 run a single minitest test
 rails test test/controllers/cats_controller_test.rb:9
 run a single rspec spec
