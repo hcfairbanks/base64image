@@ -1,28 +1,3 @@
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
- steps
-
 A. base64 image straight to rails
 B. base64 Carrierwave
 c. Rspec tests for both
@@ -40,21 +15,25 @@ https://github.com/kripken/sql.js/wiki/Display-an-image-stored-in-a-BLOB-in-a-br
 What follows are the instructions used to create this application.
 
 0. Dependiencies
+
+Rails 5.0.4
+ruby 2.4.0p0
 These instructions are Ubuntu specific, but should work for any debian based linux OS.
 You will need to install the following dependiencies.
 
 sudo apt-get install imagemagick libmagickwand-dev
+
 
 1. add gems to gem file and install
 
  gem 'carrierwave', '~> 1.0'
  gem 'carrierwave-base64'
 
- 2. add ``require 'carrierwave' `` to config/application.rb
+ 2. add "require 'carrierwave' " to config/application.rb
     so it looks like this.
-
- ``require 'carrierwave' ``
- ``require_relative 'boot'
+```
+ require 'carrierwave'
+ require_relative 'boot'
 
  require 'rails/all'
  require 'carrierwave'
@@ -69,7 +48,7 @@ sudo apt-get install imagemagick libmagickwand-dev
      # -- all .rb files in that directory are automatically loaded.
    end
  end
-``
+```
 
 
 3. Generate the cat scafold
