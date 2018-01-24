@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'carrierwave', '~> 1.0'
 gem 'carrierwave-base64'
+gem "rmagick", "~> 2.13.1"
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
@@ -40,7 +41,14 @@ gem 'jbuilder', '~> 2.5'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'factory_girl_rails'
   gem 'byebug', platform: :mri
+  gem 'rails-controller-testing'
+  gem 'rspec-rails'
+  # gem 'faker'
+  # gem 'mocha', require: false
+  # gem 'rspec-mocks'
+  gem 'database_cleaner'
 end
 
 group :development do

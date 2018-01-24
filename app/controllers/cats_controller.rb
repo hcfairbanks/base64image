@@ -24,12 +24,10 @@ class CatsController < ApplicationController
   # POST /cats
   # POST /cats.json
   def create
-
     @cat = Cat.new(cat_params)
-
     respond_to do |format|
       if @cat.save
-        format.html { redirect_to @cat, notice: 'Cat was successfully created.' }
+        format.html { redirect_to @cat, notice: t("cat.created") }
         format.json { render :show, status: :created, location: @cat }
       else
         format.html { render :new }
@@ -43,7 +41,7 @@ class CatsController < ApplicationController
   def update
     respond_to do |format|
       if @cat.update(cat_params)
-        format.html { redirect_to @cat, notice: 'Cat was successfully updated.' }
+        format.html { redirect_to @cat, notice: t("cat.updated") }
         format.json { render :show, status: :ok, location: @cat }
       else
         format.html { render :edit }
@@ -57,7 +55,7 @@ class CatsController < ApplicationController
   def destroy
     @cat.destroy
     respond_to do |format|
-      format.html { redirect_to cats_url, notice: 'Cat was successfully destroyed.' }
+      format.html { redirect_to cats_url, notice: t("cat.destroyed") }
       format.json { head :no_content }
     end
   end

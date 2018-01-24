@@ -1,4 +1,4 @@
-<%= form_for(cat) do |f| %>
+<%= form_for @cat, html: { multipart: true } do |f| %>
   <% if cat.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(cat.errors.count, "error") %> prohibited this cat from being saved:</h2>
@@ -17,11 +17,18 @@
   </div>
 
   <div class="field">
-    <%= f.label :picture %>
-    <%= f.text_field :picture %>
+    <% if @cat.picture? %>
+        <%= f.label :Current_Image %>
+        <%= image_tag(cat.picture.thumb) %>
+    <% else %>
+        <label>Upload a Picture</label>
+    <% end %>
+    <br/>
+    <%= f.file_field :picture %>
   </div>
 
   <div class="actions">
     <%= f.submit %>
   </div>
+
 <% end %>

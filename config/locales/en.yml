@@ -19,5 +19,20 @@
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
+# For overwritting default rails erros
+# http://guides.rubyonrails.org/i18n.html#error-message-interpolation
+# http://www.rubydoc.info/github/binarylogic/authlogic/Authlogic/I18n
+# https://github.com/thoughtbot/paperclip-i18n
+# gem 'paperclip-i18n'
+# Or copy over the relevant .yml files into your repo.
+# translations are done this way because word order in other languages is unpredictable
+
+# en:
+#   books:
+#     create:
+#       success: Book created!
 en:
-  hello: "Hello world"
+  cat:
+    created: "You have an awesome new cat."
+    destroyed: "Cat was successfully retired."
+    updated: "Your mouser has been updated."
