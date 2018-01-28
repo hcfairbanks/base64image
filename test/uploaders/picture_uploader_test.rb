@@ -38,6 +38,8 @@ include Magick
   end
 
   test "adds the correct permissions" do
+    # file_permissions = (File.stat(@uploader.current_path).mode & 0777).to_s(8)
+    # assert_equal("600",file_permissions)
     assert_permissions(@uploader,"600") # This should fail, a pass is "600"
   end
 
