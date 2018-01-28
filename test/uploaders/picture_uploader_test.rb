@@ -38,7 +38,7 @@ include Magick
   end
 
   test "adds the correct permissions" do
-    assert_permissions(@uploader,"700") # This should fail, a pass is "600"
+    assert_permissions(@uploader,"600") # This should fail, a pass is "600"
   end
 
   test "thumbnail is the same as the expected thumbnail file" do

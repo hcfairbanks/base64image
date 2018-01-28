@@ -27,7 +27,6 @@ Following this short tutorial will allow you to build this app. It requires a ba
 ### 2. add "require 'carrierwave' " to config/application.rb
 so it looks like this.
 ```
- require 'carrierwave'
  require_relative 'boot'
 
  require 'rails/all'
@@ -52,7 +51,7 @@ so it looks like this.
 
 rails generate uploader Picture
 
-Edit the uploader 
+Edit the uploader
 
 app/uploaders/picture_uploader.rb
 
@@ -159,45 +158,62 @@ end
 ### 9. Add a form to the cats index view
 ```app/views/cats/index.html.erb```
 ```
-<form onsubmit="return send_docs(this)">
+
+<h2>Create a new cat here</h2>
+
+<form id='string_image_form' onsubmit="send_docs(this); return false;">
+  <label for="name">Name</label>
+  <input type="text" name="name" id="name">
+  <label for="file">Picture</label>
   <input type="file" name="file" id="picture">
+  <br/>
   <input type="submit">
 </form>
 ```
 ### 10. Add a javascript function to hanndle the ajax post
 ```app/assets/javascript/cats.js```
 ```
- function send_docs(e){
-   var reader = new FileReader()
-   var files = document.getElementById('picture').files;
-   var reader = new FileReader();
-   reader.readAsDataURL(files[0]);
+function send_docs(e){
+  var reader = new FileReader()
+  // The js is the same as the following jquery line, just for reference
+  // var files = document.getElementById('picture').files;
+  var files = $("#picture").get(0).files;
+  var name = $("#name").val();
+  var reader = new FileReader();
+  reader.readAsDataURL(files[0]);
 
-   reader.onload = function () {
-     base64string = reader.result
-     console.log(base64string);
-     info = {cat:{
-              name: "Mr Furry Bottom",
-              picture: base64string
-            }};
-     $.ajax({
-         url: "http://localhost:3000/cats/",
-         type: "POST",
-         dataType: "JSON",
-         data: info,
-         success: function (response) {
-         //  alert(response);
-         }
-     });
-   }; //End of encoding
- };
+  reader.onload = function () {
+    base64string = reader.result
+    console.log(base64string);
+    info = {cat:{
+             name: name,
+             picture: base64string
+           }};
+
+    $.ajax({
+        url: "http://localhost:3000/cats/",
+        type: "POST",
+        dataType: "JSON",
+        data: info,
+        success: function (response) {
+          // You can see the full response object in
+          // Chrome developer tools, console
+          // console.log(response)
+          alert("Name: " + response.name + " ID:" + response.id );
+        }
+    });
+
+  };
+
+};
 ```
 
 
 ### 11. run migrations
 ```rails db:create db:migrate```
 
-### 12. boot application and take it for a spin
+### 12. Start application and take it for a spin
+rails s
 
 ### Testing
 
@@ -207,9 +223,21 @@ For minitest I created a sample.
 These minitest samples were made by reverse engineering the rspec tests.
 I plan on making custom asserts for minitest in the near future.
 
-### Running single tests 
+### Running single tests
 
 run a single minitest test
 rails test test/controllers/cats_controller_test.rb:9
 run a single rspec spec
 rspec spec/controllers/cats_controller_spec.rb:8
+
+
+additional Notes that needed to be added
+
+ensure jquery in the Gemfile and
+
+app/assets/application.js
+
+has these lines
+
+//= require jquery
+//= require jquery_ujs
