@@ -15,7 +15,7 @@ function send_docs(e){
              picture: base64string
            }};
 
-    $.ajax({
+    jQuery.ajax({
         url: "http://localhost:3000/cats/",
         type: "POST",
         dataType: "JSON",
