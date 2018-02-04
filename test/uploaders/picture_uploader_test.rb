@@ -1,3 +1,7 @@
+# I have created a seperate gem for carrier_wave asserts.
+# available here
+# https://github.com/hcfairbanks/carrierwave_asserts
+
 require 'test_helper'
 require 'minitest/autorun'
 require 'rmagick'
@@ -8,9 +12,7 @@ include Magick
 
   setup do
     PictureUploader.enable_processing = true
-    file_path = File.join( Rails.root,
-                           "test",
-                           "fixtures",
+    file_path = File.join( fixture_path,
                            "files",
                            "cat_images",
                            "cat_1.jpeg")
@@ -38,15 +40,12 @@ include Magick
   end
 
   test "adds the correct permissions" do
-    # file_permissions = (File.stat(@uploader.current_path).mode & 0777).to_s(8)
-    # assert_equal("600",file_permissions)
-    assert_permissions(@uploader,"600") # This should fail, a pass is "600"
+    file_permissions = (File.stat(@uploader.current_path).mode & 0777).to_s(8)
+    assert_equal("600",file_permissions)
   end
 
   test "thumbnail is the same as the expected thumbnail file" do
-    comparison_file = File.join( Rails.root,
-                                 "test",
-                                 "fixtures",
+    comparison_file = File.join( fixture_path,
                                  "files",
                                  "cat_comparison_images",
                                  "cat_uploaded.jpeg")
@@ -58,13 +57,11 @@ include Magick
     assert_equal(true, File.file?(@uploader.current_path) )
   end
 
-  # This spec may not be needed.
   test "processes the thumbnail to the proper mb size" do
     file_size = File.size(@uploader.thumb.current_path)
     assert_equal(65817,file_size)
   end
 
-  # This spec may not be needed.
   test "processes the image to the proper mb size" do
     file_size = File.size(@uploader.current_path)
     assert_equal(80467.0,file_size)
