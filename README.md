@@ -170,7 +170,7 @@ end
   <input type="submit">
 </form>
 ```
-### 10. Add a javascript function to hanndle the ajax post
+### 10. Add a javascript function to handle the ajax post
 ```app/assets/javascript/cats.js```
 ```
 function send_docs(e){
